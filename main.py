@@ -11,6 +11,7 @@ with open(dir_, "r") as f:
 with open("shell.html", "r") as shell:
     doc = BeautifulSoup(shell, "html.parser")
     body = doc.body
+    head = doc.head
 
 # divides the text into paragraphs
 paragraphs = []
@@ -34,6 +35,18 @@ for par in paragraphs:
         new_row = doc.new_tag("br")
         new_paragraph.append(new_row)
 
+print("Enter a title for your document: ")
+doc_title = input()
+title = body.h1
+title.string = doc_title
+
+print("Enter a title for your website: ")
+site_title = input()
+title = head.title
+title.string = site_title
+
+
+# put the code for the new website in its file
 with open("website.html", "w") as website:
     website.truncate(0)
     website.seek(0)
