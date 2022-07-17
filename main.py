@@ -3,11 +3,14 @@ from bs4 import BeautifulSoup
 # get the website content
 print("Enter file directory")
 dir_ = input()
-if dir_ == "t":
-    dir_ = "content.txt"
-
-with open(dir_, "r") as f:
-    content = f.readlines()
+try:
+    with open(dir_, "r") as f:
+        content = f.readlines()
+except:
+    print("We had a problem with this file...")
+    dir_ = "default.txt"
+    with open(dir_, "r") as f:
+        content = f.readlines()
 
 with open("shell.html", "r") as shell:
     doc = BeautifulSoup(shell, "html.parser")
@@ -50,10 +53,37 @@ for par in range(title_included, len(paragraphs)):
         new_row = doc.new_tag("br")
         new_paragraph.append(new_row)
 
+# add a title for the web page
 print("Enter a title for your website: ")
 site_title = input()
 title = head.title
 title.string = site_title
+
+# choose a font and text alignment
+print("Choose a font: ")
+font_menu = {"0": "sans-serif", "1": "Helvetica", "2": "Arial", "3": "serif",
+             "4": "Times", "5": "monospace", "6": "Courier New", "7": "Lucida Console"}
+for i in range(0, len(font_menu), 2):
+    print(str(i), font_menu[str(i)], "	  ", str(i+1), font_menu[str(i+1)])
+print("Enter the number matching to your font: ")
+font = input()
+# check for bad input
+if int(font) < 0 or int(font) > 7:
+    font = "2"
+
+print("choose the text alignment: ")
+alignment_menu = {0: "left", 1: "center", 2: "right"}
+for i in range(len(alignment_menu)):
+    print(i, "=", alignment_menu[i])
+text_alignment = input()
+# check for bad input
+if int(text_alignment) < 0 or int(text_alignment) > 2:
+    text_alignment = 0
+
+# set the styling
+head.style.string = "body { font-family: " + \
+    font_menu[str(int(font))] + ";\ntext-align: " + \
+    alignment_menu[int(text_alignment)] + "; }"
 
 
 # put the code for the new website in its file
@@ -63,3 +93,4 @@ with open("website.html", "w") as website:
     website.write(str(doc))
 
 print("Website Complete!")
+print("It can be found inside this folder under the name 'website.html'")
